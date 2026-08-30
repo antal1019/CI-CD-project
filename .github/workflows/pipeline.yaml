@@ -61,8 +61,8 @@ jobs:
 
   Deploy:
     runs-on: ubuntu-latest
-    needs: Build_and_Push
     if: github.event_name == 'push'
+    needs: Build_and_Push
     env:
       EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
       EC2_URL: ${{ secrets.EC2_URL }}
