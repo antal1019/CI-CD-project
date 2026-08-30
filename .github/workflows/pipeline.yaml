@@ -12,6 +12,7 @@ on:
 jobs:
   Build_and_Push:
     runs-on: ubuntu-latest
+    if : github.event_name == 'push'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,6 +61,7 @@ jobs:
 
   Deploy:
     runs-on: ubuntu-latest
+    if : github.event_name == 'push'
     needs: Build_and_Push
     env:
       EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
