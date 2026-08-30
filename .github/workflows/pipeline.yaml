@@ -34,3 +34,17 @@ jobs:
           channel: '#all-github-notifications'
           message: Docker image built and pushed successfully!
         if: always()
+
+  Code_Scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 
+      - name: Scan code
+        uses: SonarSource/sonarqube-scan-action@v8.2.1
+        with:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
+      
