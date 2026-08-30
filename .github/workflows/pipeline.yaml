@@ -27,14 +27,7 @@ jobs:
           context: ./app
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
-      - name: Send notification to Slack
-        uses: act10ns/slack@v2
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: starting
-          channel: '#all-github-notifications'
-          message: Docker image built and pushed successfully!
-        if: always()
+  
 
   Code_Scan:
     runs-on: ubuntu-latest
@@ -61,7 +54,7 @@ jobs:
 
   Deploy:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' 
     needs: Build_and_Push
     env:
       EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -85,3 +78,11 @@ jobs:
             sudo docker stop app || true
             sudo docker rm app || true
             sudo docker run -d --name app -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
+      - name: Send notification to Slack
+        uses: act10ns/slack@v2
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: starting
+          channel: '#all-github-notifications'
+          message: Deployment successfull!
+        if: always()
