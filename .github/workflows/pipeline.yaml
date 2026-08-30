@@ -80,6 +80,6 @@ jobs:
       - name: Deploy Docker container to EC2
         run: |
           sudo docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
-          sudo docker stop myapp || true
-          sudo docker rm myapp || true
+          sudo docker stop app || true
+          sudo docker rm app || true
           sudo docker run -d --name app -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest  
