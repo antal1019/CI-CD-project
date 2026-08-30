@@ -72,14 +72,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup SSH for EC2
-        uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
-        with:
-          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
-          EC2_URL: $EC2_URL
       - name: Deploy Docker container to EC2
-        run: |
-          sudo docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
-          sudo docker stop app || true
-          sudo docker rm app || true
-          sudo docker run -d --name app -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest  
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_URL }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            sudo docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
+            sudo docker stop app || true
+            sudo docker rm app || true
+            sudo docker run -d --name app -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
