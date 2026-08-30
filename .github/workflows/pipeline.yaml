@@ -56,3 +56,27 @@ jobs:
           channel: '#all-github-notifications'
           message: Code scan passed!
         if: success()
+
+
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: Build_and_Push
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.0.3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Setup SSH Connection
+        uses: bondz/ssh-ec2-action@v2
+        with:
+          ec2-instance-id: i-096f4fa57a5575ec1
+          remote-user: ubuntu
+      - name: Deploy Docker Container
+        run: |
+            sudo docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
+            sudo docker stop myapp || true
+            sudo docker rm myapp || true
+            sudo docker run -d --name myapp -p 5000:5000 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPOSITORY }}:latest
+
