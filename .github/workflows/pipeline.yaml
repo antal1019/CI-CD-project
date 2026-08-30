@@ -11,8 +11,8 @@ on:
 
 jobs:
   Build_and_Push:
-    runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
