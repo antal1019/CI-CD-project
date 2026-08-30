@@ -33,12 +33,19 @@ builds a Docker image and deploys Docker container to AWS EC2.
 ## Structure
 
 ├── .github/
+
 │ └── workflows/
+
 │ └── pipeline.yaml
+
 ├── app/
+
 │ ├── app.py
+
 │ ├── requirements.txt
+
 │ └── Dockerfile
+
 └── sonar-project.properties
 
 ## Prerequisites
